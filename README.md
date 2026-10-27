@@ -6,6 +6,13 @@ An interactive data analytics dashboard exploring patterns in recorded crime acr
 
 Developed as an extension of my MSc Statistics for AI & Data Science coursework, this project transforms crime and population datasets into interactive visualisations to support exploratory analysis and geographic comparisons.
 
+## Dashboard Preview
+
+### Crime Trends and Categories
+![London Crime Explorer Dashboard](screenshots/dashboard-overview.png)
+
+### Crime Rates and Geographical Mapping
+![London Crime Explorer Geographical Map](screenshots/crime-map.png)
 ## Project Overview
 
 The London Crime Explorer enables users to investigate recorded crime patterns through an interactive web application.
