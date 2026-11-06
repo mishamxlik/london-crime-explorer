@@ -1,7 +1,10 @@
 """Run once with the coursework CSVs to create small dashboard-ready datasets."""
 from pathlib import Path
 import pandas as pd
-
+from calculations import calculate_crime_rate
+def calculate_crime_rate(crimes, population):
+    """Calculate recorded crimes per 1,000 residents."""
+    return (crimes / population) * 1000
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / 'source_data'
 OUT = ROOT / 'data'
@@ -28,6 +31,6 @@ monthly.to_csv(OUT/'monthly_by_borough.csv',index=False)
 combine(type_parts,['PartOfName','CrimeType']).to_csv(OUT/'types_by_borough.csv',index=False)
 area=combine(area_parts,['LSOACode']).merge(pop,on='LSOACode',how='left')
 area=area[area['Total']>0].copy()
-area['CrimesPer1000']=area['Crimes']/area['Total']*1000
+area['CrimesPer1000'] = calculate_crime_rate(area['Crimes'], area['Total'])
 area.to_csv(OUT/'lsoa_rates.csv',index=False)
 print('Created three dashboard-ready files in data/.')

@@ -17,3 +17,4 @@ data/
 .env.*
 # Local coding assistant files
 .agents/
+.pytest_cache/
