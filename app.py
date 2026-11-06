@@ -28,11 +28,11 @@ col1,col2,col3=st.columns(3)
 col1.metric('Recorded crimes',f'{int(m.Crimes.sum()):,}')
 col2.metric('Crime categories',f'{len(t):,}')
 col3.metric('LSOAs with data',f'{len(a):,}')
-st.plotly_chart(px.line(m,x='Month',y='Crimes',markers=True,title=f'Monthly recorded crime — {selected}'),use_container_width=True)
-st.plotly_chart(px.bar(t.head(12),x='Crimes',y='CrimeType',orientation='h',title='Most recorded crime categories').update_layout(yaxis={'categoryorder':'total ascending'}),use_container_width=True)
+st.plotly_chart(px.line(m,x='Month',y='Crimes',markers=True,title=f'Monthly recorded crime — {selected}'),width="stretch")
+st.plotly_chart(px.bar(t.head(12),x='Crimes',y='CrimeType',orientation='h',title='Most recorded crime categories').update_layout(yaxis={'categoryorder':'total ascending'}),width="stretch")
 st.subheader('Crime rates across small areas')
 st.caption('Crimes per 1,000 residents. Interpret with caution: city centres, commuters and visitors can inflate resident-based rates.')
-st.plotly_chart(px.histogram(a,x='CrimesPer1000',nbins=35,title=f'Distribution of LSOA crime rates — {selected}'),use_container_width=True)
+st.plotly_chart(px.histogram(a,x='CrimesPer1000',nbins=35,title=f'Distribution of LSOA crime rates — {selected}'),width="stretch")
 st.subheader('Geographical map')
 geo_path = BASE / 'source_data' / 'LSOA_England_geom.gpkg'
 if geo_path.exists():
@@ -47,11 +47,24 @@ if geo_path.exists():
             # Stable index property for Plotly matching.
             geo=geo.reset_index(drop=True)
             geo['map_id']=geo.index.astype(str)
-            fig=px.choropleth(geo,geojson=geo.__geo_interface__,locations='map_id',
-                              featureidkey='properties.map_id',color='CrimesPer1000',
-                              title=f'Crime rate by LSOA — {selected}')
+            geo['AreaCode'] = geo[code_col].astype(str)
+            fig = px.choropleth(
+                geo,
+                geojson=geo.__geo_interface__,
+                locations='map_id',
+                featureidkey='properties.map_id',
+                color='CrimesPer1000',
+                hover_name='AreaCode',
+                hover_data={
+                    'map_id': False,
+                    'AreaCode': False,
+                    'CrimesPer1000': ':.1f'
+                },
+                labels={'CrimesPer1000': 'Crimes per 1,000 residents'},
+                title=f'Crime rate by LSOA — {selected}'
+            )
             fig.update_geos(fitbounds='locations',visible=False)
-            st.plotly_chart(fig,use_container_width=True)
+            st.plotly_chart(fig,width="stretch")
         else: st.warning('No compatible LSOA code column found in the GeoPackage.')
     except Exception as exc:
         st.warning(f'Map could not load: {exc}')

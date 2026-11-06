@@ -15,3 +15,5 @@ data/
 # Environment variables and secrets
 .env
 .env.*
+# Local coding assistant files
+.agents/
