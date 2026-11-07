@@ -2,9 +2,6 @@
 from pathlib import Path
 import pandas as pd
 from calculations import calculate_crime_rate
-def calculate_crime_rate(crimes, population):
-    """Calculate recorded crimes per 1,000 residents."""
-    return (crimes / population) * 1000
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / 'source_data'
 OUT = ROOT / 'data'
